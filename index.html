@@ -245,14 +245,14 @@
             Bone: L.layerGroup().addTo(map),
             WP_Taccipi: L.layerGroup().addTo(map),
             WP_Cangadi: L.layerGroup().addTo(map),
-            WP_DonriDonri: L.layerGroup().addTo(map)
+            WP_Donridonri: L.layerGroup().addTo(map)
         };
 
         const polygonConfig = {
             "Soppeng": { nama: "Soppeng", luas: "1.500 km²", penduduk: "238.220 Jiwa", pane: 'paneKabupaten', style: { color: '#0284c7', weight: 2, opacity: 1, fillColor: '#0284c7', fillOpacity: 1.0 } },
             "Bone": { nama: "Bone", luas: "4.559 km²", penduduk: "801.775 Jiwa", pane: 'paneKabupaten', style: { color: '#d97706', weight: 2, opacity: 1, fillColor: '#d97706', fillOpacity: 1.0 } },
             "WP_Cangadi": { nama: "WP Perkotaan Cangadi", status: "PKL (Pusat Kegiatan Lokal)", luas: "3 KM²", penduduk: "2500 jiwa", desa: "Kelurahan Cangadi", kecamatan: "Liliriaja", kabupaten: "Soppeng", pane: 'paneWP', style: { color: '#f59e0b', weight: 3, opacity: 1, fillColor: '#f59e0b', fillOpacity: 1.0 } },
-            "WP_DonriDonri": { nama: "WP Perkotaan Donri-Donri", status: "PPK (Pusat Pelayanan Kawasan)", luas: "4,2 KM²", penduduk: "3100 jiwa", desa: "Donri-Donri", kecamatan: "Donri-Donri", kabupaten: "Soppeng", pane: 'paneWP', style: { color: '#8b5cf6', weight: 3, opacity: 1, fillColor: '#8b5cf6', fillOpacity: 1.0 } },
+            "WP_Donridonri": { nama: "WP Perkotaan Donri-Donri", status: "PPK (Pusat Pelayanan Kawasan)", luas: "4,2 KM²", penduduk: "3100 jiwa", desa: "Donri-Donri", kecamatan: "Donri-Donri", kabupaten: "Soppeng", pane: 'paneWP', style: { color: '#8b5cf6', weight: 3, opacity: 1, fillColor: '#8b5cf6', fillOpacity: 1.0 } },
             "WP_Taccipi": { nama: "WP Perkotaan Taccipi", status: "PKL (Pusat Kegiatan Lokal)", luas: "2,1 KM²", penduduk: "2800 jiwa", desa: "Taccipi", kecamatan: "Ulaweng", kabupaten: "Bone", pane: 'paneWP', style: { color: '#ef4444', weight: 3, opacity: 1, fillColor: '#ef4444', fillOpacity: 1.0 } }
         };
 
@@ -411,7 +411,7 @@
                 .then(res => res.json())
                 .then(data => loadGeoJSONData(key, data))
                 .catch(err => {
-                    if (key === 'WP_DonriDonri') {
+                    if (key === 'WP_Donridonri') {
                         loadGeoJSONData(key, {
                             "type": "FeatureCollection",
                             "features": [{ "type": "Feature", "properties": { "NAMOBJ": "WP Donri-Donri" }, "geometry": { "type": "Polygon", "coordinates": [[[119.835, -4.285], [119.870, -4.285], [119.870, -4.320], [119.835, -4.320], [119.835, -4.285]]] } }]
