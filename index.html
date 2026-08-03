@@ -7,20 +7,23 @@
     <link rel="icon" type="image/png" href="img/logo_atr.png">    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     
+    <!-- SKRIP PELACAK PENGUNJUNG ASLI GOATCOUNTER -->
+    <script data-goatcounter="https://rdtrsulsel.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body, html { height: 100%; font-family: 'Inter', -apple-system, sans-serif; overflow: hidden; background: #0f172a; }
         #map { width: 100%; height: 100vh; z-index: 1; }
 
-        /* Sidebar Control Panel (Desktop Default - JANGAN DIGANGGU) */
+        /* Sidebar Control Panel */
         .sidebar-panel {
-            position: absolute; top: 0; left: 0; bottom: 0; width: 340px;
+            position: absolute; top: 0; left: 0; bottom: 0; width: 360px;
             background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px);
             border-right: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 10px 0 30px rgba(0,0,0,0.5); z-index: 1000;
             display: flex; flex-direction: column; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .sidebar-panel.collapsed { transform: translateX(-340px); }
+        .sidebar-panel.collapsed { transform: translateX(-360px); }
         .sidebar-header { padding: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: space-between; }
         .sidebar-title-group h1 { font-size: 14px; font-weight: 700; color: #f8fafc; letter-spacing: 0.5px; text-transform: uppercase; }
         .sidebar-title-group span { font-size: 10px; color: #94a3b8; letter-spacing: 0.5px; }
@@ -53,7 +56,7 @@
         input:checked + .slider { background-color: #3b82f6; }
         input:checked + .slider:before { transform: translateX(18px); }
 
-        .wp-list { list-style: none; }
+        .wp-list { list-style: none; margin-bottom: 15px; }
         .wp-list li {
             background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.05);
             margin-bottom: 10px; padding: 12px; border-radius: 8px; cursor: pointer; color: #e2e8f0;
@@ -64,7 +67,20 @@
         .wp-title { font-size: 12px; font-weight: 600; color: #ffffff; display: flex; align-items: center; gap: 6px; }
         .wp-desc { font-size: 10px; color: #94a3b8; line-height: 1.4; }
 
-        /* Custom Label Wilayah Tanpa Background */
+        /* TEKS VISITOR POLOS TANPA KOTAK (DI BAWAH WP, KHUSUS DESKTOP) */
+        .desktop-visitor-text {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            padding-left: 2px;
+            letter-spacing: 0.3px;
+        }
+        .desktop-visitor-text span {
+            color: #38bdf8;
+            font-weight: 700;
+        }
+
         .map-region-label {
             background: transparent; border: none; color: #ffffff;
             font-size: 10px; font-weight: 800; padding: 0;
@@ -73,7 +89,6 @@
             pointer-events: none; text-align: center;
         }
 
-        /* Custom Popup Clean Offset & Z-Index */
         .leaflet-popup { margin-bottom: 0px !important; z-index: 9999 !important; }
         .leaflet-popup-pane { z-index: 9999 !important; }
         .leaflet-popup-content-wrapper {
@@ -104,12 +119,22 @@
             color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4);
         }
 
-        .sidebar-footer { padding: 16px 18px; border-top: 1px solid rgba(255, 255, 255, 0.08); background: rgba(10, 16, 30, 0.9); display: flex; align-items: center; gap: 12px; margin-top: auto; }
-        .atr-logo-img { width: 74px; height: 74px; object-fit: contain; flex-shrink: 0; }
+        /* BANTEK & LOGO LEBIH BESAR, LEGA, DAN JELAS */
+        .sidebar-footer { 
+            padding: 16px 20px; 
+            border-top: 1px solid rgba(255, 255, 255, 0.12); 
+            background: rgba(8, 13, 24, 0.98); 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+            margin-top: auto; 
+        }
+        .footer-main-row { display: flex; align-items: center; gap: 14px; width: 100%; }
+        .atr-logo-img { width: 64px; height: 64px; object-fit: contain; flex-shrink: 0; }
         .footer-text-group { display: flex; flex-direction: column; gap: 3px; }
-        .footer-label { font-size: 8.5px; font-weight: 700; color: #38bdf8; letter-spacing: 1px; text-transform: uppercase; }
-        .footer-title { font-size: 10px; font-weight: 700; color: #f1f5f9; line-height: 1.35; text-transform: uppercase; }
-        .footer-sub { font-size: 9.5px; font-weight: 600; color: #fbbf24; margin-top: 1px; }
+        .footer-label { font-size: 10px; font-weight: 800; color: #38bdf8; letter-spacing: 1.2px; text-transform: uppercase; }
+        .footer-title { font-size: 11px; font-weight: 700; color: #f8fafc; line-height: 1.4; text-transform: uppercase; }
+        .footer-sub { font-size: 10px; font-weight: 700; color: #fbbf24; letter-spacing: 0.5px; }
 
         .open-sidebar-btn { position: absolute; top: 15px; left: 15px; background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.15); color: #f8fafc; padding: 10px 16px; border-radius: 8px; cursor: pointer; z-index: 999; display: none; align-items: center; gap: 12px; }
         .open-sidebar-btn.visible { display: flex; }
@@ -142,7 +167,6 @@
         .globe-label, .reset-label { background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.15); color: #f8fafc; padding: 6px 16px; border-radius: 20px 0 0 20px; margin-right: -12px; font-size: 11px; opacity: 0; visibility: hidden; transform: translateX(15px); transition: all 0.3s; pointer-events: none; }
         .globe-wrapper:hover .globe-label, .reset-wrapper:hover .reset-label { opacity: 1; visibility: visible; transform: translateX(0); }
 
-        /* Inset Map Container */
         .inset-map-container {
             position: absolute; bottom: 20px; right: 20px;
             width: 240px; height: 180px;
@@ -153,136 +177,44 @@
         }
         #inset-map { width: 100%; height: 100%; flex-grow: 1; background: #0b1120; }
 
-        /* =========================================================
-           MODE HP (MOBILE RESPONSIVE):
-           - Muncul secara elegan di bawah pada pembukaan awal.
-           - Bisa di-swipe (tarik ke bawah untuk menyembunyikan, tarik ke atas untuk memunculkan).
-           - Tanpa tombol teks tambahan, elegan, rapi, teks WP terbaca jelas, dan tanpa elemen "Semua Kabupaten".
-           ========================================================= */
+        /* RESPONSIF MODE HP (MOBILE) */
         @media (max-width: 768px) {
             .sidebar-panel {
-                position: absolute;
-                top: auto;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                width: 100%;
-                height: auto;
-                max-height: 46vh;
-                transform: translateY(0); /* Terbuka secara default di awal */
+                position: absolute; top: auto; left: 0; right: 0; bottom: 0;
+                width: 100%; height: auto; max-height: 46vh;
+                transform: translateY(0);
                 border-radius: 20px 20px 0 0;
                 box-shadow: 0 -10px 30px rgba(0,0,0,0.7);
-                z-index: 2000;
-                background: rgba(15, 23, 42, 0.98);
-                backdrop-filter: blur(16px);
-                border-right: none;
+                z-index: 2000; background: rgba(15, 23, 42, 0.98);
+                backdrop-filter: blur(16px); border-right: none;
                 border-top: 1px solid rgba(255, 255, 255, 0.15);
                 transition: transform 0.35s cubic-bezier(0.1, 0.9, 0.2, 1);
             }
-
-            /* Kelas saat panel disembunyikan via swipe ke bawah */
-            .sidebar-panel.mobile-hidden {
-                transform: translateY(calc(100% - 32px));
-            }
-
-            /* Handle bar interaktif untuk swipe atas/bawah */
+            .sidebar-panel.mobile-hidden { transform: translateY(calc(100% - 32px)); }
             .sidebar-panel::before {
-                content: '';
-                position: absolute;
-                top: 8px;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 40px;
-                height: 4px;
-                background: rgba(255, 255, 255, 0.35);
-                border-radius: 2px;
-                z-index: 2005;
+                content: ''; position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+                width: 40px; height: 4px; background: rgba(255, 255, 255, 0.35); border-radius: 2px; z-index: 2005;
             }
-
             .sidebar-header { display: none; }
             .collapse-panel-btn { display: none; }
             .open-sidebar-btn { display: none !important; }
-
-            .sidebar-content {
-                padding: 16px 12px 6px 12px;
-                overflow-y: hidden !important;
-            }
+            .sidebar-content { padding: 16px 12px 6px 12px; overflow-y: hidden !important; }
             .sidebar-content p { display: none; }
-            .section-label { 
-                font-size: 8.5px; 
-                text-align: center; 
-                color: #94a3b8; 
-                margin-top: 2px; 
-                margin-bottom: 8px; 
-                letter-spacing: 1.2px;
-                text-transform: uppercase;
-            }
+            .section-label { font-size: 8.5px; text-align: center; color: #94a3b8; margin-top: 2px; margin-bottom: 8px; letter-spacing: 1.2px; text-transform: uppercase; }
             .layer-control-container { display: none; }
-
-            /* Grid WP Horizontal yang Rapih, Elegan & Proporsional */
-            .wp-list {
-                display: flex;
-                flex-direction: row;
-                gap: 8px;
-                overflow-x: auto;
-                padding-bottom: 6px;
-                scrollbar-width: none;
-            }
-            .wp-list::-webkit-scrollbar { display: none; }
-
-            .wp-list li {
-                flex: 1 0 31%;
-                min-width: 105px;
-                background: rgba(30, 41, 59, 0.85);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                margin-bottom: 0;
-                padding: 9px 8px;
-                border-radius: 10px;
-                align-items: flex-start;
-                text-align: left;
-                white-space: normal !important;
-            }
-            .wp-list li:hover { transform: none; }
-            .wp-list li.active { background: rgba(59, 130, 246, 0.35); border-color: #3b82f6; }
             
-            .wp-title { 
-                font-size: 10px; 
-                font-weight: 700; 
-                color: #ffffff; 
-                display: flex; 
-                align-items: flex-start; 
-                gap: 4px; 
-                width: 100%; 
-                text-align: left;
-                white-space: normal !important;
-                line-height: 1.3;
-            }
-            .wp-desc { 
-                font-size: 8.5px; 
-                color: #94a3b8; 
-                width: 100%; 
-                text-align: left;
-                white-space: normal !important;
-                line-height: 1.25;
-                margin-top: 3px;
-            }
+            /* Sembunyikan teks visitor di mode HP */
+            .desktop-visitor-text { display: none !important; }
 
-            .sidebar-footer {
-                padding: 8px 14px;
-                background: rgba(10, 16, 30, 0.98);
-                border-top: 1px solid rgba(255, 255, 255, 0.08);
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                margin-top: 4px;
-                border-radius: 0;
-            }
-            .atr-logo-img { width: 42px; height: 42px; }
-            .footer-text-group { display: flex; flex-direction: column; gap: 1px; }
-            .footer-label { font-size: 7.5px; color: #38bdf8; letter-spacing: 0.8px; }
-            .footer-title { font-size: 9px; font-weight: 700; color: #f1f5f9; line-height: 1.25; }
-            .footer-sub { font-size: 8.5px; color: #fbbf24; margin-top: 0; }
-
+            .wp-list { display: flex; flex-direction: row; gap: 8px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: none; margin-bottom: 6px; }
+            .wp-list::-webkit-scrollbar { display: none; }
+            .wp-list li { flex: 1 0 31%; min-width: 105px; background: rgba(30, 41, 59, 0.85); border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 0; padding: 9px 8px; border-radius: 10px; align-items: flex-start; text-align: left; }
+            .wp-title { font-size: 10px; font-weight: 700; color: #ffffff; display: flex; align-items: flex-start; gap: 4px; width: 100%; text-align: left; line-height: 1.3; }
+            .wp-desc { font-size: 8.5px; color: #94a3b8; width: 100%; text-align: left; line-height: 1.25; margin-top: 3px; }
+            
+            .sidebar-footer { padding: 12px 14px; background: rgba(8, 13, 24, 0.98); gap: 6px; margin-top: 4px; border-radius: 0; }
+            .atr-logo-img { width: 44px; height: 44px; }
+            .footer-title { font-size: 9.5px; line-height: 1.3; }
             .right-controls-stack { top: 15px; right: 15px; gap: 10px; }
             .globe-basemap-btn { width: 46px; height: 46px; }
             .reset-view-btn { width: 44px; height: 44px; }
@@ -332,17 +264,24 @@
             </div>
 
             <p>Pilih Wilayah Perencanaan di bawah untuk fokus peta:</p>
-            
             <div class="section-label">Daftar Wilayah Perencanaan</div>
             <ul class="wp-list" id="wpListContainer"></ul>
+
+            <!-- TEKS VISITOR POLOS TANPA KOTAK (DI BAWAH WP, KHUSUS DESKTOP) -->
+            <div class="desktop-visitor-text">
+                Visitor: <span id="visitorCountDesktop">Memuat...</span>
+            </div>
         </div>
 
+        <!-- FOOTER BANTUAN TEKNIS DIPERBESAR & LEGA -->
         <div class="sidebar-footer">
-            <img class="atr-logo-img" src="img/logo_atr.png" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/e/e8/Logo_Kementerian_Agraria_dan_Tata_Ruang_-_Badan_Pertanahan_Nasional_%28ATR-BPN%29.png';" alt="Logo ATR BPN">
-            <div class="footer-text-group">
-                <div class="footer-label">Bantuan Teknis</div>
-                <div class="footer-title">Penyusunan Matek & Ranperkada RDTR di Kab. Soppeng & Kab. Bone</div>
-                <div class="footer-sub">Tahun Anggaran 2026</div>
+            <div class="footer-main-row">
+                <img class="atr-logo-img" src="img/logo_atr.png" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/e/e8/Logo_Kementerian_Agraria_dan_Tata_Ruang_-_Badan_Pertanahan_Nasional_%28ATR-BPN%29.png';" alt="Logo ATR BPN">
+                <div class="footer-text-group">
+                    <div class="footer-label">Bantuan Teknis</div>
+                    <div class="footer-title">Penyusunan Matek & Ranperkada RDTR di Kab. Soppeng & Kab. Bone</div>
+                    <div class="footer-sub">Tahun Anggaran 2026</div>
+                </div>
             </div>
         </div>
     </div>
@@ -370,13 +309,27 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script>
+        // TARIK DATA VISITOR ASLI DARI GOATCOUNTER TANPA PANCINGAN
+        window.addEventListener('load', function() {
+            fetch('https://rdtrsulsel.goatcounter.com/counter/.json')
+                .then(response => response.json())
+                .then(data => {
+                    const totalVisits = (data.total !== undefined) ? data.total : 0;
+                    const el = document.getElementById('visitorCountDesktop');
+                    if(el) el.textContent = totalVisits.toLocaleString('id-ID');
+                })
+                .catch(() => {
+                    const el = document.getElementById('visitorCountDesktop');
+                    if(el) el.textContent = "Aktif";
+                });
+        });
+
         const map = L.map('map', { zoomControl: false, attributionControl: false });
         
         const googleSatelliteLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', { maxZoom: 20, subdomains: ['mt0', 'mt1', 'mt2', 'mt3'] }).addTo(map);
-        const osmTopoLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { maxZoom: 17, attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, SRTM | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)' });
+        const osmTopoLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { maxZoom: 17 });
         
         let currentBasemap = 'satellite';
-        const cleanName = str => str ? str.replace(/kabupaten\s*/gi, '').trim() : "-";
 
         map.createPane('paneKabupaten');
         map.getPane('paneKabupaten').style.zIndex = 401;
@@ -406,27 +359,20 @@
         };
 
         const insetMap = L.map('inset-map', {
-            zoomControl: false,
-            attributionControl: false,
-            dragging: false,
-            scrollWheelZoom: false,
-            doubleClickZoom: false,
-            boxZoom: false,
-            keyboard: false,
-            touchZoom: false
+            zoomControl: false, attributionControl: false, dragging: false,
+            scrollWheelZoom: false, doubleClickZoom: false, boxZoom: false, keyboard: false, touchZoom: false
         }).setView([-3.5, 120.0], 5);
 
         const insetSatelliteLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', { maxZoom: 12, subdomains: ['mt0', 'mt1', 'mt2', 'mt3'] }).addTo(insetMap);
         const insetTopoLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { maxZoom: 12 });
-        let insetBoundsRect = L.rectangle([[0,0],[0,0]], { color: '#ef4444', weight: 2, fillColor: '#ef4444', fillOpacity: 0.4 }).addTo(insetMap);
+        let inboxBoundsRect = L.rectangle([[0,0],[0,0]], { color: '#ef4444', weight: 2, fillColor: '#ef4444', fillOpacity: 0.4 }).addTo(insetMap);
 
         function updateInsetMap() {
             if (window.innerWidth <= 768) return;
             const mainCenter = map.getCenter();
             const mainZoom = map.getZoom();
-            const insetTargetZoom = Math.max(2.0, mainZoom - 5.33);
-            insetMap.setView(mainCenter, insetTargetZoom, { animate: false });
-            insetBoundsRect.setBounds(map.getBounds());
+            insetMap.setView(mainCenter, Math.max(2.0, mainZoom - 5.33), { animate: false });
+            inboxBoundsRect.setBounds(map.getBounds());
         }
 
         function toggleLayer(layerKey, isVisible) {
@@ -462,16 +408,13 @@
 
         function renderCalloutPositions() {
             if (!currentTargetData) return;
-
             const { configKey, anchorLatLng } = currentTargetData;
             const config = polygonConfig[configKey];
-            
             const isMobile = window.innerWidth <= 768;
             const containerPt = map.latLngToContainerPoint(anchorLatLng);
 
             const xOffset = isMobile ? 0 : (containerPt.x > map.getSize().x / 2 ? -210 : 210);
             const yOffset = isMobile ? -100 : -130;
-
             const targetPt = L.point(containerPt.x + xOffset, containerPt.y + yOffset);
             const targetLatLng = map.containerPointToLatLng(targetPt);
 
@@ -479,17 +422,13 @@
             const dotFill = (currentBasemap === 'satellite') ? '#38bdf8' : '#2563eb';
 
             if (!activeCalloutLine) {
-                activeCalloutLine = L.polyline([anchorLatLng, targetLatLng], { 
-                    color: lineColor, weight: 2.5, opacity: 0.9, interactive: false, pane: 'paneCallout'
-                }).addTo(map);
+                activeCalloutLine = L.polyline([anchorLatLng, targetLatLng], { color: lineColor, weight: 2.5, opacity: 0.9, interactive: false, pane: 'paneCallout' }).addTo(map);
             } else {
                 activeCalloutLine.setLatLngs([anchorLatLng, targetLatLng]);
             }
 
             if (!activeCalloutDot) {
-                activeCalloutDot = L.circleMarker(anchorLatLng, { 
-                    radius: 5, color: lineColor, weight: 2, fillColor: dotFill, fillOpacity: 1, interactive: false, pane: 'paneCallout'
-                }).addTo(map);
+                activeCalloutDot = L.circleMarker(anchorLatLng, { radius: 5, color: lineColor, weight: 2, fillColor: dotFill, fillOpacity: 1, interactive: false, pane: 'paneCallout' }).addTo(map);
             } else {
                 activeCalloutDot.setLatLng(anchorLatLng);
             }
@@ -514,10 +453,7 @@
             `;
 
             if (!activePopup) {
-                activePopup = L.popup({ autoPan: false, closeButton: true, pane: 'paneCallout' })
-                    .setLatLng(targetLatLng)
-                    .setContent(content)
-                    .openOn(map);
+                activePopup = L.popup({ autoPan: false, closeButton: true, pane: 'paneCallout' }).setLatLng(targetLatLng).setContent(content).openOn(map);
             } else {
                 activePopup.setLatLng(targetLatLng);
             }
@@ -542,20 +478,12 @@
                 click: e => {
                     const isMobile = window.innerWidth <= 768;
                     const clickedLatLng = e.latlng;
-
                     if (configKey.startsWith('WP_')) {
-                        if (config.kabupaten.toLowerCase().includes("soppeng")) {
-                            toggleLayer('Soppeng', false);
-                        } else if (config.kabupaten.toLowerCase().includes("bone")) {
-                            toggleLayer('Bone', false);
-                        }
-
+                        if (config.kabupaten.toLowerCase().includes("soppeng")) toggleLayer('Soppeng', false);
+                        else if (config.kabupaten.toLowerCase().includes("bone")) toggleLayer('Bone', false);
                         if (isMobile) {
-                            const bounds = e.target.getBounds();
-                            map.once('moveend', () => {
-                                triggerCalloutAt(configKey, clickedLatLng);
-                            });
-                            map.fitBounds(bounds, { padding: [30, 30], maxZoom: 15, animate: true });
+                            map.once('moveend', () => triggerCalloutAt(configKey, clickedLatLng));
+                            map.fitBounds(e.target.getBounds(), { padding: [30, 30], maxZoom: 15, animate: true });
                         } else {
                             triggerCalloutAt(configKey, clickedLatLng);
                         }
@@ -585,8 +513,7 @@
                     iconSize: [90, 20],
                     iconAnchor: [45, 10]
                 });
-                const labelMarker = L.marker(centerPoint, { icon: labelIcon, interactive: false, pane: 'paneCallout' }).addTo(map);
-                countyLabelMarkers[key] = labelMarker;
+                countyLabelMarkers[key] = L.marker(centerPoint, { icon: labelIcon, interactive: false, pane: 'paneCallout' }).addTo(map);
             }
         }
 
@@ -594,7 +521,7 @@
             fetch(`${key}.geojson`)
                 .then(res => res.json())
                 .then(data => loadGeoJSONData(key, data))
-                .catch(err => {
+                .catch(() => {
                     if (key === 'WP_Donridonri') {
                         loadGeoJSONData(key, {
                             "type": "FeatureCollection",
@@ -621,84 +548,38 @@
 
         function selectLocation(index) {
             const data = locationsData[index];
-            if (data.kabupaten.toLowerCase().includes("soppeng")) {
-                toggleLayer('Soppeng', false);
-            } else if (data.kabupaten.toLowerCase().includes("bone")) {
-                toggleLayer('Bone', false);
-            }
+            if (data.kabupaten.toLowerCase().includes("soppeng")) toggleLayer('Soppeng', false);
+            else if (data.kabupaten.toLowerCase().includes("bone")) toggleLayer('Bone', false);
 
             const targetLayerGroup = wpLayerRefs[data.key];
-
             if (targetLayerGroup && targetLayerGroup.getBounds().isValid()) {
                 const bounds = targetLayerGroup.getBounds();
                 const centerLatLng = bounds.getCenter();
                 const isMobile = window.innerWidth <= 768;
 
-                map.once('moveend', () => {
-                    triggerCalloutAt(data.key, centerLatLng);
-                });
-
+                map.once('moveend', () => triggerCalloutAt(data.key, centerLatLng));
                 map.fitBounds(bounds, {
-                    paddingTopLeft: isMobile ? [30, 30] : [360, 50],
+                    paddingTopLeft: isMobile ? [30, 30] : [380, 50],
                     paddingBottomRight: isMobile ? [30, 30] : [50, 50],
-                    maxZoom: 15,
-                    animate: true
+                    maxZoom: 15, animate: true
                 });
             }
-
             document.querySelectorAll('.wp-list li').forEach((el, i) => el.classList.toggle('active', i === index));
         }
 
         function applyInitialView() {
-            const isMobile = window.innerWidth <= 768;
-            if (isMobile) {
-                map.setView([-4.85, 120.00], 8.8);
-            } else {
-                map.setView([-4.50, 119.80], 9.4);
-            }
+            if (window.innerWidth <= 768) map.setView([-4.85, 120.00], 8.8);
+            else map.setView([-4.50, 119.80], 9.4);
             updateInsetMap();
         }
-
         applyInitialView();
 
         function toggleSidebar(collapse) {
             const panel = document.getElementById('sidebarPanel');
-            if (window.innerWidth <= 768) {
-                return;
-            } else {
-                panel.classList.toggle('collapsed', collapse);
-                document.getElementById('openSidebarBtn').classList.toggle('visible', collapse);
-            }
-            setTimeout(() => {
-                map.invalidateSize({ animate: true });
-                updateInsetMap();
-            }, 300);
-        }
-
-        /* Logic Touch Swipe Atas / Bawah untuk Mobile Control Panel */
-        const sidebarPanel = document.getElementById('sidebarPanel');
-        let touchStartY = 0;
-        let touchEndY = 0;
-
-        sidebarPanel.addEventListener('touchstart', e => {
-            touchStartY = e.changedTouches[0].screenY;
-        }, { passive: true });
-
-        sidebarPanel.addEventListener('touchend', e => {
-            touchEndY = e.changedTouches[0].screenY;
-            handleSwipeGesture();
-        }, { passive: true });
-
-        function handleSwipeGesture() {
-            if (window.innerWidth > 768) return;
-            const swipeDistance = touchEndY - touchStartY;
-            if (swipeDistance > 50) {
-                // Swipe ke bawah -> Sembunyikan panel
-                sidebarPanel.classList.add('mobile-hidden');
-            } else if (swipeDistance < -50) {
-                // Swipe ke atas -> Munculkan kembali panel
-                sidebarPanel.classList.remove('mobile-hidden');
-            }
+            if (window.innerWidth <= 768) return;
+            panel.classList.toggle('collapsed', collapse);
+            document.getElementById('openSidebarBtn').classList.toggle('visible', collapse);
+            setTimeout(() => { map.invalidateSize({ animate: true }); updateInsetMap(); }, 300);
         }
 
         function toggleBasemap() {
@@ -710,11 +591,8 @@
             (isSat ? insetTopoLayer : insetSatelliteLayer).addTo(insetMap);
 
             currentBasemap = isSat ? 'osm' : 'satellite';
-
-            const globeIcon = document.getElementById('globeIcon');
-            globeIcon.src = isSat ? 'img/osm.png' : 'img/google.png';
+            document.getElementById('globeIcon').src = isSat ? 'img/osm.png' : 'img/google.png';
             document.getElementById('globeLabel').textContent = isSat ? "OpenTopoMap (Topografi)" : "Google Satellite";
-            
             renderCalloutPositions();
         }
 
