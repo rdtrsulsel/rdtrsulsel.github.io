@@ -191,9 +191,13 @@
                 overflow-y: auto;
                 -webkit-overflow-scrolling: touch;
             }
+            .sidebar-panel.collapsed-mobile {
+                transform: translateY(calc(100% - 46px));
+            }
             .sidebar-panel::before {
                 content: ''; position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
                 width: 40px; height: 4px; background: rgba(255, 255, 255, 0.35); border-radius: 2px; z-index: 2005;
+                cursor: pointer;
             }
             .sidebar-header { display: none; }
             .collapse-panel-btn { display: none; }
@@ -322,7 +326,6 @@
                     if(el) el.textContent = totalVisits.toLocaleString('id-ID');
                 })
                 .catch(() => {
-                    // Fallback otomatis ambil total global jika path spesifik gagal
                     fetch('https://rdtrsulsel.goatcounter.com/counter/.json')
                         .then(res => res.json())
                         .then(d => {
@@ -334,6 +337,39 @@
                             if(el) el.textContent = "Aktif";
                         });
                 });
+        });
+
+        // SWIPE & TARIK GESTURE UNTUK MOBILE PANEL
+        const sidebarPanel = document.getElementById('sidebarPanel');
+        let touchStartY = 0;
+        let touchEndY = 0;
+
+        sidebarPanel.addEventListener('touchstart', function(e) {
+            touchStartY = e.changedTouches[0].screenY;
+        }, { passive: true });
+
+        sidebarPanel.addEventListener('touchend', function(e) {
+            touchEndY = e.changedTouches[0].screenY;
+            handleSwipe();
+        }, { passive: true });
+
+        function handleSwipe() {
+            if (window.innerWidth <= 768) {
+                if (touchEndY - touchStartY > 60) {
+                    // Gesek ke bawah (minimize/sembunyikan sebagian besar panel)
+                    sidebarPanel.classList.add('collapsed-mobile');
+                } else if (touchStartY - touchEndY > 60) {
+                    // Gesek ke atas (tampilkan panel secara penuh)
+                    sidebarPanel.classList.remove('collapsed-mobile');
+                }
+            }
+        }
+
+        // Klik pada indikator garis atas panel untuk toggle buka/tutup cepat di HP
+        sidebarPanel.addEventListener('click', function(e) {
+            if (window.innerWidth <= 768 && e.clientY - sidebarPanel.getBoundingClientRect().top < 25) {
+                sidebarPanel.classList.toggle('collapsed-mobile');
+            }
         });
 
         const map = L.map('map', { zoomControl: false, attributionControl: false });
