@@ -177,17 +177,19 @@
         }
         #inset-map { width: 100%; height: 100%; flex-grow: 1; background: #0b1120; }
 
-        /* RESPONSIF MODE HP (MOBILE) - SWIPE & SCROLL PANEL DIKEMBALIKAN UTUH */
+        /* RESPONSIF MODE HP (MOBILE) - SWIPE, TARIK & SCROLL PANEL DIBUKA PENUH */
         @media (max-width: 768px) {
             .sidebar-panel {
                 position: absolute; top: auto; left: 0; right: 0; bottom: 0;
-                width: 100%; height: auto; max-height: 48vh;
+                width: 100%; height: auto; max-height: 52vh;
                 transform: translateY(0);
                 border-radius: 20px 20px 0 0;
                 box-shadow: 0 -10px 30px rgba(0,0,0,0.7);
                 z-index: 2000; background: rgba(15, 23, 42, 0.98);
                 backdrop-filter: blur(16px); border-right: none;
                 border-top: 1px solid rgba(255, 255, 255, 0.15);
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
             }
             .sidebar-panel::before {
                 content: ''; position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
@@ -197,18 +199,14 @@
             .collapse-panel-btn { display: none; }
             .open-sidebar-btn { display: none !important; }
             
-            /* SWIPE DAN SCROLL DIAKTIFKAN KEMBALI SECARA PENUH DI HP */
             .sidebar-content { 
                 padding: 16px 12px 10px 12px; 
-                overflow-y: auto !important; 
-                max-height: calc(48vh - 70px);
-                -webkit-overflow-scrolling: touch;
+                overflow-y: visible !important; 
             }
             .sidebar-content p { display: none; }
             .section-label { font-size: 8.5px; text-align: center; color: #94a3b8; margin-top: 2px; margin-bottom: 8px; letter-spacing: 1.2px; text-transform: uppercase; }
             .layer-control-container { display: none; }
             
-            /* Sembunyikan teks visitor di mode HP sesuai permintaan awal */
             .desktop-visitor-text { display: none !important; }
 
             .wp-list { display: flex; flex-direction: row; gap: 8px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: none; margin-bottom: 6px; }
@@ -272,7 +270,7 @@
             <div class="section-label">Daftar Wilayah Perencanaan</div>
             <ul class="wp-list" id="wpListContainer"></ul>
 
-            <!-- TEKS VISITOR POLOS TANPA KOTAK (DI BAWAH WP, KHUSUS DESKTOP) -->
+            <!-- TEKS VISITOR GOATCOUNTER REAL-TIME (DESKTOP) -->
             <div class="desktop-visitor-text">
                 Visitor: <span id="visitorCountDesktop">Memuat...</span>
             </div>
@@ -314,9 +312,9 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script>
-        // TARIK DATA VISITOR ASLI DARI GOATCOUNTER TANPA PANCINGAN
+        // TARIK DATA VISITOR GOATCOUNTER MENGGUNAKAN API PUBLIK YANG AKURAT
         window.addEventListener('load', function() {
-            fetch('https://rdtrsulsel.goatcounter.com/counter/.json')
+            fetch('https://rdtrsulsel.goatcounter.com/counter/'.concat(location.pathname, '.json'))
                 .then(response => response.json())
                 .then(data => {
                     const totalVisits = (data.total !== undefined) ? data.total : 0;
@@ -324,8 +322,17 @@
                     if(el) el.textContent = totalVisits.toLocaleString('id-ID');
                 })
                 .catch(() => {
-                    const el = document.getElementById('visitorCountDesktop');
-                    if(el) el.textContent = "Aktif";
+                    // Fallback otomatis ambil total global jika path spesifik gagal
+                    fetch('https://rdtrsulsel.goatcounter.com/counter/.json')
+                        .then(res => res.json())
+                        .then(d => {
+                            const el = document.getElementById('visitorCountDesktop');
+                            if(el) el.textContent = (d.total !== undefined ? d.total : 1).toLocaleString('id-ID');
+                        })
+                        .catch(() => {
+                            const el = document.getElementById('visitorCountDesktop');
+                            if(el) el.textContent = "Aktif";
+                        });
                 });
         });
 
