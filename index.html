@@ -177,20 +177,18 @@
         }
         #inset-map { width: 100%; height: 100%; flex-grow: 1; background: #0b1120; }
 
-        /* RESPONSIF MODE HP (MOBILE) */
+        /* RESPONSIF MODE HP (MOBILE) - SWIPE & SCROLL PANEL DIKEMBALIKAN UTUH */
         @media (max-width: 768px) {
             .sidebar-panel {
                 position: absolute; top: auto; left: 0; right: 0; bottom: 0;
-                width: 100%; height: auto; max-height: 46vh;
+                width: 100%; height: auto; max-height: 48vh;
                 transform: translateY(0);
                 border-radius: 20px 20px 0 0;
                 box-shadow: 0 -10px 30px rgba(0,0,0,0.7);
                 z-index: 2000; background: rgba(15, 23, 42, 0.98);
                 backdrop-filter: blur(16px); border-right: none;
                 border-top: 1px solid rgba(255, 255, 255, 0.15);
-                transition: transform 0.35s cubic-bezier(0.1, 0.9, 0.2, 1);
             }
-            .sidebar-panel.mobile-hidden { transform: translateY(calc(100% - 32px)); }
             .sidebar-panel::before {
                 content: ''; position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
                 width: 40px; height: 4px; background: rgba(255, 255, 255, 0.35); border-radius: 2px; z-index: 2005;
@@ -198,12 +196,19 @@
             .sidebar-header { display: none; }
             .collapse-panel-btn { display: none; }
             .open-sidebar-btn { display: none !important; }
-            .sidebar-content { padding: 16px 12px 6px 12px; overflow-y: hidden !important; }
+            
+            /* SWIPE DAN SCROLL DIAKTIFKAN KEMBALI SECARA PENUH DI HP */
+            .sidebar-content { 
+                padding: 16px 12px 10px 12px; 
+                overflow-y: auto !important; 
+                max-height: calc(48vh - 70px);
+                -webkit-overflow-scrolling: touch;
+            }
             .sidebar-content p { display: none; }
             .section-label { font-size: 8.5px; text-align: center; color: #94a3b8; margin-top: 2px; margin-bottom: 8px; letter-spacing: 1.2px; text-transform: uppercase; }
             .layer-control-container { display: none; }
             
-            /* Sembunyikan teks visitor di mode HP */
+            /* Sembunyikan teks visitor di mode HP sesuai permintaan awal */
             .desktop-visitor-text { display: none !important; }
 
             .wp-list { display: flex; flex-direction: row; gap: 8px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: none; margin-bottom: 6px; }
