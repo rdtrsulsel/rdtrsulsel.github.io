@@ -26,7 +26,8 @@
             border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.6); text-align: center;
         }
-        .login-logo { width: 64px; height: 64px; object-fit: contain; margin-bottom: 15px; }
+        /* UKURAN LOGO LOGIN DIPBESAR MENJADI 96px */
+        .login-logo { width: 96px; height: 96px; object-fit: contain; margin-bottom: 15px; }
         .login-title { font-size: 15px; font-weight: 700; color: #f8fafc; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
         .login-subtitle { font-size: 11px; color: #94a3b8; margin-bottom: 25px; line-height: 1.4; }
         .form-group { margin-bottom: 15px; text-align: left; }
@@ -145,7 +146,8 @@
             background: rgba(8, 13, 24, 0.98); display: flex; flex-direction: column; gap: 10px; margin-top: auto; 
         }
         .footer-main-row { display: flex; align-items: center; gap: 14px; width: 100%; }
-        .atr-logo-img { width: 64px; height: 64px; object-fit: contain; flex-shrink: 0; }
+        /* UKURAN LOGO FOOTER DIPBESAR MENJADI 76px AGAR PAS DAN JELAS */
+        .atr-logo-img { width: 76px; height: 76px; object-fit: contain; flex-shrink: 0; }
         .footer-text-group { display: flex; flex-direction: column; gap: 3px; }
         .footer-label { font-size: 10px; font-weight: 800; color: #38bdf8; letter-spacing: 1.2px; text-transform: uppercase; }
         .footer-title { font-size: 11px; font-weight: 700; color: #f8fafc; line-height: 1.4; text-transform: uppercase; }
@@ -194,6 +196,7 @@
                 border-radius: 20px 20px 0 0; box-shadow: 0 -10px 30px rgba(0,0,0,0.7);
                 z-index: 2000; background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(16px);
                 border-top: 1px solid rgba(255, 255, 255, 0.15); overflow-y: auto;
+                touch-action: pan-y;
             }
             .sidebar-panel.collapsed-mobile { transform: translateY(calc(100% - 46px)); }
             .sidebar-panel::before {
@@ -212,11 +215,14 @@
             .wp-desc { font-size: 8.5px; color: #94a3b8; width: 100%; line-height: 1.25; margin-top: 3px; }
             
             .sidebar-footer { padding: 12px 14px; background: rgba(8, 13, 24, 0.98); gap: 6px; margin-top: 4px; border-radius: 0; }
-            .atr-logo-img { width: 44px; height: 44px; }
+            /* LOGO FOOTER DI HP DISESUAIKAN MENJADI 56px */
+            .atr-logo-img { width: 56px; height: 56px; }
             .footer-title { font-size: 9.5px; line-height: 1.3; }
+            
             .right-controls-stack { top: 15px; right: 15px; gap: 10px; }
-            .globe-basemap-btn, .logout-action-btn { width: 44px; height: 44px; }
-            .reset-view-btn { width: 42px; height: 42px; }
+            .globe-basemap-btn, .logout-action-btn { width: 44px; height: 44px; filter: none !important; box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
+            .reset-view-btn { width: 42px; height: 42px; filter: none !important; box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
+            .globe-label, .reset-label, .logout-label { display: none !important; }
         }
     </style>
 </head>
@@ -336,6 +342,33 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script>
+        // --- FITUR AUTO-LOGOUT 5 MENIT (MOUSE, KEYBOARD, TOUCHSCREEN) ---
+        const IDLE_LIMIT = 5 * 60 * 1000;
+        let idleTimer;
+
+        function checkInactivityAndLogout() {
+            if (sessionStorage.getItem('isLoggedIn') === 'true') {
+                handleLogout();
+                alert("Sesi Anda telah berakhir karena tidak ada aktivitas selama 5 menit.");
+            }
+        }
+
+        function resetIdleTimer() {
+            clearTimeout(idleTimer);
+            if (sessionStorage.getItem('isLoggedIn') === 'true') {
+                idleTimer = setTimeout(checkInactivityAndLogout, IDLE_LIMIT);
+            }
+        }
+
+        window.onload = resetIdleTimer;
+        window.onmousemove = resetIdleTimer;
+        window.onmousedown = resetIdleTimer;
+        window.onclick = resetIdleTimer;
+        window.onkeypress = resetIdleTimer;
+        window.addEventListener('scroll', resetIdleTimer, true);
+        window.addEventListener('touchstart', resetIdleTimer, true);
+        window.addEventListener('touchmove', resetIdleTimer, true);
+
         // LOGIKA OTENTIKASI LOGIN
         function handleLogin(e) {
             e.preventDefault();
@@ -346,6 +379,7 @@
             if (u === 'maiwarman' && p === 'rdtrsulsel') {
                 sessionStorage.setItem('isLoggedIn', 'true');
                 showApp();
+                resetIdleTimer();
             } else {
                 err.style.display = 'block';
                 document.getElementById('password').value = '';
@@ -354,6 +388,7 @@
 
         function handleLogout() {
             sessionStorage.removeItem('isLoggedIn');
+            clearTimeout(idleTimer);
             document.getElementById('appContainer').style.display = 'none';
             document.getElementById('loginOverlay').style.opacity = '1';
             document.getElementById('loginOverlay').style.display = 'flex';
@@ -365,12 +400,10 @@
             const overlay = document.getElementById('loginOverlay');
             overlay.style.opacity = '0';
             
-            // Tampilkan container aplikasi terlebih dahulu agar elemen DOM peta ada ukurannya
             document.getElementById('appContainer').style.display = 'block';
             
             setTimeout(() => {
                 overlay.style.display = 'none';
-                // Paksa render ulang ukuran dan ubin peta setelah overlay benar-benar hilang
                 map.invalidateSize(true);
                 insetMap.invalidateSize(true);
                 updateInsetMap();
@@ -381,6 +414,7 @@
             if (sessionStorage.getItem('isLoggedIn') === 'true') {
                 document.getElementById('loginOverlay').style.display = 'none';
                 document.getElementById('appContainer').style.display = 'block';
+                resetIdleTimer();
                 setTimeout(() => {
                     map.invalidateSize(true);
                     insetMap.invalidateSize(true);
@@ -422,17 +456,20 @@
 
         function handleSwipe() {
             if (window.innerWidth <= 768) {
-                if (touchEndY - touchStartY > 60) {
+                if (touchEndY - touchStartY > 50) {
                     sidebarPanel.classList.add('collapsed-mobile');
-                } else if (touchStartY - touchEndY > 60) {
+                } else if (touchStartY - touchEndY > 50) {
                     sidebarPanel.classList.remove('collapsed-mobile');
                 }
             }
         }
 
         sidebarPanel.addEventListener('click', function(e) {
-            if (window.innerWidth <= 768 && e.clientY - sidebarPanel.getBoundingClientRect().top < 25) {
-                sidebarPanel.classList.toggle('collapsed-mobile');
+            if (window.innerWidth <= 768) {
+                const rect = sidebarPanel.getBoundingClientRect();
+                if (e.clientY - rect.top < 40) {
+                    sidebarPanel.classList.toggle('collapsed-mobile');
+                }
             }
         });
 
