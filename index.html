@@ -7,12 +7,47 @@
     <link rel="icon" type="image/png" href="img/logo_atr.png">    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
     
-    <!-- SKRIP PELACAK PENGUNJUNG ASLI GOATCOUNTER -->
+    <!-- SKRIP PELACAK PENGUNJUNG GOATCOUNTER -->
     <script data-goatcounter="https://rdtrsulsel.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body, html { height: 100%; font-family: 'Inter', -apple-system, sans-serif; overflow: hidden; background: #0f172a; }
+        
+        /* HALAMAN LOGIN */
+        #loginOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #0f172a; display: flex; align-items: center; justify-content: center;
+            z-index: 99999; transition: opacity 0.4s ease;
+        }
+        .login-container {
+            width: 100%; max-width: 400px; padding: 30px;
+            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6); text-align: center;
+        }
+        .login-logo { width: 64px; height: 64px; object-fit: contain; margin-bottom: 15px; }
+        .login-title { font-size: 15px; font-weight: 700; color: #f8fafc; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
+        .login-subtitle { font-size: 11px; color: #94a3b8; margin-bottom: 25px; line-height: 1.4; }
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 1px; margin-bottom: 6px; }
+        .form-control {
+            width: 100%; padding: 12px 14px; background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px;
+            color: #f8fafc; font-size: 12px; outline: none; transition: all 0.2s;
+        }
+        .form-control:focus { border-color: #3b82f6; box-shadow: 0 0 10px rgba(59, 130, 246, 0.25); }
+        .login-btn {
+            width: 100%; padding: 12px; background: #3b82f6; border: none;
+            border-radius: 8px; color: #ffffff; font-size: 12px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer;
+            transition: background 0.2s; margin-top: 10px;
+        }
+        .login-btn:hover { background: #2563eb; }
+        .error-msg { color: #ef4444; font-size: 11px; margin-top: 12px; display: none; }
+
+        /* APLIKASI UTAMA PETA */
+        #appContainer { display: none; width: 100%; height: 100vh; position: relative; }
         #map { width: 100%; height: 100vh; z-index: 1; }
 
         /* Sidebar Control Panel */
@@ -67,19 +102,10 @@
         .wp-title { font-size: 12px; font-weight: 600; color: #ffffff; display: flex; align-items: center; gap: 6px; }
         .wp-desc { font-size: 10px; color: #94a3b8; line-height: 1.4; }
 
-        /* TEKS VISITOR GOATCOUNTER */
         .desktop-visitor-text {
-            font-size: 11px;
-            color: #94a3b8;
-            margin-top: 15px;
-            margin-bottom: 5px;
-            padding-left: 2px;
-            letter-spacing: 0.3px;
+            font-size: 11px; color: #94a3b8; margin-top: 15px; margin-bottom: 5px; padding-left: 2px; letter-spacing: 0.3px;
         }
-        .desktop-visitor-text span {
-            color: #38bdf8;
-            font-weight: 700;
-        }
+        .desktop-visitor-text span { color: #38bdf8; font-weight: 700; }
 
         .map-region-label {
             background: transparent; border: none; color: #ffffff;
@@ -92,13 +118,9 @@
         .leaflet-popup { margin-bottom: 0px !important; z-index: 9999 !important; }
         .leaflet-popup-pane { z-index: 9999 !important; }
         .leaflet-popup-content-wrapper {
-            background: rgba(15, 23, 42, 0.95) !important;
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(56, 189, 248, 0.4);
-            color: #f8fafc !important;
-            border-radius: 10px !important;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7) !important;
-            padding: 2px !important;
+            background: rgba(15, 23, 42, 0.95) !important; backdrop-filter: blur(12px);
+            border: 1px solid rgba(56, 189, 248, 0.4); color: #f8fafc !important;
+            border-radius: 10px !important; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7) !important; padding: 2px !important;
         }
         .leaflet-popup-tip-container { display: none !important; }
         .leaflet-popup-content { margin: 0 !important; line-height: 1.4 !important; }
@@ -106,8 +128,7 @@
         .popup-info-card { padding: 14px 16px; min-width: 240px; max-width: 290px; }
         .popup-info-card h3 {
             font-size: 12px; color: #38bdf8; text-transform: uppercase; font-weight: 700;
-            letter-spacing: 0.5px; margin-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-            padding-bottom: 6px;
+            letter-spacing: 0.5px; margin-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.12); padding-bottom: 6px;
         }
         .popup-info-card .info-row { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #cbd5e1; margin-bottom: 6px; gap: 12px; }
         .popup-info-card .info-row span.label { color: #94a3b8; }
@@ -120,13 +141,8 @@
         }
 
         .sidebar-footer { 
-            padding: 16px 20px; 
-            border-top: 1px solid rgba(255, 255, 255, 0.12); 
-            background: rgba(8, 13, 24, 0.98); 
-            display: flex; 
-            flex-direction: column; 
-            gap: 10px; 
-            margin-top: auto; 
+            padding: 16px 20px; border-top: 1px solid rgba(255, 255, 255, 0.12); 
+            background: rgba(8, 13, 24, 0.98); display: flex; flex-direction: column; gap: 10px; margin-top: auto; 
         }
         .footer-main-row { display: flex; align-items: center; gap: 14px; width: 100%; }
         .atr-logo-img { width: 64px; height: 64px; object-fit: contain; flex-shrink: 0; }
@@ -141,200 +157,256 @@
         .btn-text { font-size: 12px; font-weight: 700; color: #f8fafc; text-transform: uppercase; }
 
         .right-controls-stack { position: absolute; top: 20px; right: 20px; z-index: 1000; display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
-        .globe-wrapper, .reset-wrapper { display: flex; align-items: center; flex-direction: row-reverse; cursor: pointer; }
+        .globe-wrapper, .reset-wrapper, .logout-wrapper { display: flex; align-items: center; flex-direction: row-reverse; cursor: pointer; }
         
-        .globe-basemap-btn {
-            width: 52px; height: 52px; border: none; background: transparent; cursor: pointer;
+        .globe-basemap-btn, .logout-action-btn {
+            width: 52px; height: 52px; border: none; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); cursor: pointer;
             border-radius: 50%; position: relative; padding: 0; outline: none;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            display: flex; align-items: center; justify-content: center;
             filter: drop-shadow(0 4px 12px rgba(0,0,0,0.6));
         }
         .globe-basemap-btn img {
             width: 100%; height: 100%; border-radius: 50%; object-fit: cover;
             animation: rotateGlobe 16s linear infinite;
-            transition: animation-duration 0.3s ease, filter 0.3s ease;
         }
-        .globe-basemap-btn:hover img { animation-duration: 4s; }
-
-        @keyframes rotateGlobe {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
+        @keyframes rotateGlobe { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
         .reset-view-btn { width: 47px; height: 47px; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 258, 0.18); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; margin-right: 4px; }
-        .home-icon-img { width: 25px; height: 25px; filter: brightness(0) invert(1) opacity(0.85); }
+        .home-icon-img, .logout-icon-img { width: 22px; height: 22px; filter: brightness(0) invert(1) opacity(0.85); }
 
-        .globe-label, .reset-label { background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.15); color: #f8fafc; padding: 6px 16px; border-radius: 20px 0 0 20px; margin-right: -12px; font-size: 11px; opacity: 0; visibility: hidden; transform: translateX(15px); transition: all 0.3s; pointer-events: none; }
-        .globe-wrapper:hover .globe-label, .reset-wrapper:hover .reset-label { opacity: 1; visibility: visible; transform: translateX(0); }
+        .globe-label, .reset-label, .logout-label { background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.15); color: #f8fafc; padding: 6px 16px; border-radius: 20px 0 0 20px; margin-right: -12px; font-size: 11px; opacity: 0; visibility: hidden; transform: translateX(15px); transition: all 0.3s; pointer-events: none; }
+        .globe-wrapper:hover .globe-label, .reset-wrapper:hover .reset-label, .logout-wrapper:hover .logout-label { opacity: 1; visibility: visible; transform: translateX(0); }
 
         .inset-map-container {
-            position: absolute; bottom: 20px; right: 20px;
-            width: 240px; height: 180px;
+            position: absolute; bottom: 20px; right: 20px; width: 240px; height: 180px;
             background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px);
             border: 1px solid rgba(56, 189, 248, 0.5); border-radius: 10px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7); z-index: 1000;
-            overflow: hidden; display: flex; flex-direction: column;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7); z-index: 1000; overflow: hidden; display: flex; flex-direction: column;
         }
         #inset-map { width: 100%; height: 100%; flex-grow: 1; background: #0b1120; }
 
-        /* RESPONSIF MODE HP (MOBILE) - SWIPE, TARIK & SCROLL PANEL DIBUKA PENUH */
+        /* RESPONSIF MODE HP */
         @media (max-width: 768px) {
             .sidebar-panel {
                 position: absolute; top: auto; left: 0; right: 0; bottom: 0;
-                width: 100%; height: auto; max-height: 52vh;
-                transform: translateY(0);
-                border-radius: 20px 20px 0 0;
-                box-shadow: 0 -10px 30px rgba(0,0,0,0.7);
-                z-index: 2000; background: rgba(15, 23, 42, 0.98);
-                backdrop-filter: blur(16px); border-right: none;
-                border-top: 1px solid rgba(255, 255, 255, 0.15);
-                overflow-y: auto;
-                -webkit-overflow-scrolling: touch;
+                width: 100%; height: auto; max-height: 52vh; transform: translateY(0);
+                border-radius: 20px 20px 0 0; box-shadow: 0 -10px 30px rgba(0,0,0,0.7);
+                z-index: 2000; background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(16px);
+                border-top: 1px solid rgba(255, 255, 255, 0.15); overflow-y: auto;
             }
-            .sidebar-panel.collapsed-mobile {
-                transform: translateY(calc(100% - 46px));
-            }
+            .sidebar-panel.collapsed-mobile { transform: translateY(calc(100% - 46px)); }
             .sidebar-panel::before {
                 content: ''; position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
                 width: 40px; height: 4px; background: rgba(255, 255, 255, 0.35); border-radius: 2px; z-index: 2005;
-                cursor: pointer;
             }
-            .sidebar-header { display: none; }
-            .collapse-panel-btn { display: none; }
-            .open-sidebar-btn { display: none !important; }
-            
-            .sidebar-content { 
-                padding: 16px 12px 10px 12px; 
-                overflow-y: visible !important; 
-            }
-            .sidebar-content p { display: none; }
+            .sidebar-header, .collapse-panel-btn, .open-sidebar-btn { display: none !important; }
+            .sidebar-content { padding: 16px 12px 10px 12px; overflow-y: visible !important; }
+            .sidebar-content p, .layer-control-container, .desktop-visitor-text, .inset-map-container { display: none !important; }
             .section-label { font-size: 8.5px; text-align: center; color: #94a3b8; margin-top: 2px; margin-bottom: 8px; letter-spacing: 1.2px; text-transform: uppercase; }
-            .layer-control-container { display: none; }
             
-            .desktop-visitor-text { display: none !important; }
-
             .wp-list { display: flex; flex-direction: row; gap: 8px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: none; margin-bottom: 6px; }
             .wp-list::-webkit-scrollbar { display: none; }
-            .wp-list li { flex: 1 0 31%; min-width: 105px; background: rgba(30, 41, 59, 0.85); border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 0; padding: 9px 8px; border-radius: 10px; align-items: flex-start; text-align: left; }
-            .wp-title { font-size: 10px; font-weight: 700; color: #ffffff; display: flex; align-items: flex-start; gap: 4px; width: 100%; text-align: left; line-height: 1.3; }
-            .wp-desc { font-size: 8.5px; color: #94a3b8; width: 100%; text-align: left; line-height: 1.25; margin-top: 3px; }
+            .wp-list li { flex: 1 0 31%; min-width: 105px; background: rgba(30, 41, 59, 0.85); border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 0; padding: 9px 8px; border-radius: 10px; text-align: left; }
+            .wp-title { font-size: 10px; font-weight: 700; color: #ffffff; display: flex; gap: 4px; width: 100%; line-height: 1.3; }
+            .wp-desc { font-size: 8.5px; color: #94a3b8; width: 100%; line-height: 1.25; margin-top: 3px; }
             
             .sidebar-footer { padding: 12px 14px; background: rgba(8, 13, 24, 0.98); gap: 6px; margin-top: 4px; border-radius: 0; }
             .atr-logo-img { width: 44px; height: 44px; }
             .footer-title { font-size: 9.5px; line-height: 1.3; }
             .right-controls-stack { top: 15px; right: 15px; gap: 10px; }
-            .globe-basemap-btn { width: 46px; height: 46px; }
-            .reset-view-btn { width: 44px; height: 44px; }
-            .inset-map-container { display: none !important; }
+            .globe-basemap-btn, .logout-action-btn { width: 44px; height: 44px; }
+            .reset-view-btn { width: 42px; height: 42px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="open-sidebar-btn" id="openSidebarBtn" onclick="toggleSidebar(false)">
-        <span class="hamburger-icon">☰</span>
-        <span class="btn-text">DATA RDTR</span>
+    <!-- HALAMAN LOGIN -->
+    <div id="loginOverlay">
+        <div class="login-container">
+            <img class="login-logo" src="img/logo_atr.png" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/e/e8/Logo_Kementerian_Agraria_dan_Tata_Ruang_-_Badan_Pertanahan_Nasional_%28ATR-BPN%29.png';" alt="Logo ATR BPN">
+            <h1 class="login-title">RDTR Soppeng & Bone</h1>
+            <p class="login-subtitle">Silakan masuk menggunakan akun resmi untuk mengakses sistem spasial.</p>
+            
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="username" class="form-control" placeholder="Masukkan username" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="Masukkan password" required autocomplete="current-password">
+                </div>
+                <button type="submit" class="login-btn">Masuk Sistem</button>
+                <div id="errorMsg" class="error-msg">Username atau password salah!</div>
+            </form>
+        </div>
     </div>
 
-    <div class="sidebar-panel" id="sidebarPanel">
-        <div class="sidebar-header" id="sidebarHeader">
-            <div class="sidebar-title-group">
-                <h1>RDTR WP Soppeng & Bone</h1>
-                <span>Spatial Planning Analytics</span>
-            </div>
-            <button class="collapse-panel-btn" onclick="toggleSidebar(true)">&lt;</button>
+    <!-- APLIKASI UTAMA PETA WEB GIS -->
+    <div id="appContainer">
+        <div class="open-sidebar-btn" id="openSidebarBtn" onclick="toggleSidebar(false)">
+            <span class="hamburger-icon">☰</span>
+            <span class="btn-text">DATA RDTR</span>
         </div>
-        
-        <div class="sidebar-content">
-            <div class="section-label">Layer Poligon Wilayah</div>
-            <div class="layer-control-container">
-                <div class="toggle-item">
-                    <div class="toggle-label-group">
-                        <span class="color-dot" style="background-color: #0284c7;"></span>
-                        <span>Poligon Kab. Soppeng</span>
+
+        <div class="sidebar-panel" id="sidebarPanel">
+            <div class="sidebar-header" id="sidebarHeader">
+                <div class="sidebar-title-group">
+                    <h1>RDTR WP Soppeng & Bone</h1>
+                    <span>Spatial Planning Analytics</span>
+                </div>
+                <button class="collapse-panel-btn" onclick="toggleSidebar(true)">&lt;</button>
+            </div>
+            
+            <div class="sidebar-content">
+                <div class="section-label">Layer Poligon Wilayah</div>
+                <div class="layer-control-container">
+                    <div class="toggle-item">
+                        <div class="toggle-label-group">
+                            <span class="color-dot" style="background-color: #0284c7;"></span>
+                            <span>Poligon Kab. Soppeng</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="chkSoppeng" checked onchange="toggleLayer('Soppeng', this.checked)">
+                            <span class="slider"></span>
+                        </label>
                     </div>
-                    <label class="switch">
-                        <input type="checkbox" id="chkSoppeng" checked onchange="toggleLayer('Soppeng', this.checked)">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                <div class="toggle-item">
-                    <div class="toggle-label-group">
-                        <span class="color-dot" style="background-color: #d97706;"></span>
-                        <span>Poligon Kab. Bone</span>
+                    <div class="toggle-item">
+                        <div class="toggle-label-group">
+                            <span class="color-dot" style="background-color: #d97706;"></span>
+                            <span>Poligon Kab. Bone</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="chkBone" checked onchange="toggleLayer('Bone', this.checked)">
+                            <span class="slider"></span>
+                        </label>
                     </div>
-                    <label class="switch">
-                        <input type="checkbox" id="chkBone" checked onchange="toggleLayer('Bone', this.checked)">
-                        <span class="slider"></span>
-                    </label>
+                </div>
+
+                <p>Pilih Wilayah Perencanaan di bawah untuk fokus peta:</p>
+                <div class="section-label">Daftar Wilayah Perencanaan</div>
+                <ul class="wp-list" id="wpListContainer"></ul>
+
+                <div class="desktop-visitor-text">
+                    Visitor: <span id="visitorCountDesktop">2</span>
                 </div>
             </div>
 
-            <p>Pilih Wilayah Perencanaan di bawah untuk fokus peta:</p>
-            <div class="section-label">Daftar Wilayah Perencanaan</div>
-            <ul class="wp-list" id="wpListContainer"></ul>
-
-            <!-- TEKS VISITOR GOATCOUNTER REAL-TIME (DESKTOP) -->
-            <div class="desktop-visitor-text">
-                Visitor: <span id="visitorCountDesktop">2</span>
-            </div>
-        </div>
-
-        <div class="sidebar-footer">
-            <div class="footer-main-row">
-                <img class="atr-logo-img" src="img/logo_atr.png" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/e/e8/Logo_Kementerian_Agraria_dan_Tata_Ruang_-_Badan_Pertanahan_Nasional_%28ATR-BPN%29.png';" alt="Logo ATR BPN">
-                <div class="footer-text-group">
-                    <div class="footer-label">Bantuan Teknis</div>
-                    <div class="footer-title">Penyusunan Matek & Ranperkada RDTR di Kab. Soppeng & Kab. Bone</div>
-                    <div class="footer-sub">Tahun Anggaran 2026</div>
+            <div class="sidebar-footer">
+                <div class="footer-main-row">
+                    <img class="atr-logo-img" src="img/logo_atr.png" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/e/e8/Logo_Kementerian_Agraria_dan_Tata_Ruang_-_Badan_Pertanahan_Nasional_%28ATR-BPN%29.png';" alt="Logo ATR BPN">
+                    <div class="footer-text-group">
+                        <div class="footer-label">Bantuan Teknis</div>
+                        <div class="footer-title">Penyusunan Matek & Ranperkada RDTR di Kab. Soppeng & Kab. Bone</div>
+                        <div class="footer-sub">Tahun Anggaran 2026</div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="right-controls-stack">
-        <div class="globe-wrapper" onclick="toggleBasemap()">
-            <button class="globe-basemap-btn" id="globeBtn" title="Ganti Basemap">
-                <img id="globeIcon" src="img/google.png" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/2/22/Earth_Western_Hemisphere_transparent_background.png';" alt="Basemap Switcher">
-            </button>
-            <div class="globe-label" id="globeLabel">Google Satellite</div>
+        <div class="right-controls-stack">
+            <div class="globe-wrapper" onclick="toggleBasemap()">
+                <button class="globe-basemap-btn" id="globeBtn" title="Ganti Basemap">
+                    <img id="globeIcon" src="img/google.png" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/2/22/Earth_Western_Hemisphere_transparent_background.png';" alt="Basemap Switcher">
+                </button>
+                <div class="globe-label" id="globeLabel">Google Satellite</div>
+            </div>
+            <div class="reset-wrapper" onclick="resetMapView()">
+                <button class="reset-view-btn" title="Reset View">
+                    <img class="home-icon-img" src="https://cdn-icons-png.flaticon.com/512/25/25694.png" alt="Reset Home">
+                </button>
+                <div class="reset-label">Reset Tampilan Awal</div>
+            </div>
+            <div class="logout-wrapper" onclick="handleLogout()">
+                <button class="logout-action-btn" title="Keluar Sistem">
+                    <img class="logout-icon-img" src="https://cdn-icons-png.flaticon.com/512/1286/1286853.png" alt="Logout">
+                </button>
+                <div class="logout-label">Keluar Sistem</div>
+            </div>
         </div>
-        <div class="reset-wrapper" onclick="resetMapView()">
-            <button class="reset-view-btn" title="Reset View">
-                <img class="home-icon-img" src="https://cdn-icons-png.flaticon.com/512/25/25694.png" alt="Reset Home">
-            </button>
-            <div class="reset-label">Reset Tampilan Awal</div>
+
+        <div class="inset-map-container" id="insetContainer">
+            <div id="inset-map"></div>
         </div>
-    </div>
 
-    <div class="inset-map-container" id="insetContainer">
-        <div id="inset-map"></div>
+        <div id="map"></div>
     </div>
-
-    <div id="map"></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script>
-        // TARIK DATA VISITOR GOATCOUNTER (STABIL & AMAN LOKAL/LIVE)
-        window.addEventListener('load', function() {
-            if (window.innerWidth > 768) {
-                fetch('https://rdtrsulsel.goatcounter.com/counter/.json')
-                    .then(response => {
-                        if (!response.ok) throw new Error('Network response was not ok');
-                        return response.json();
-                    })
-                    .then(data => {
-                        const totalVisits = (data.total !== undefined) ? data.total : (data.count !== undefined ? data.count : 2);
-                        const el = document.getElementById('visitorCountDesktop');
-                        if(el) el.textContent = totalVisits.toLocaleString('id-ID');
-                    })
-                    .catch(() => {
-                        const el = document.getElementById('visitorCountDesktop');
-                        if(el) el.textContent = "2";
-                    });
+        // LOGIKA OTENTIKASI LOGIN
+        function handleLogin(e) {
+            e.preventDefault();
+            const u = document.getElementById('username').value.trim();
+            const p = document.getElementById('password').value.trim();
+            const err = document.getElementById('errorMsg');
+
+            if (u === 'maiwarman' && p === 'rdtrsulsel') {
+                sessionStorage.setItem('isLoggedIn', 'true');
+                showApp();
+            } else {
+                err.style.display = 'block';
+                document.getElementById('password').value = '';
+            }
+        }
+
+        function handleLogout() {
+            sessionStorage.removeItem('isLoggedIn');
+            document.getElementById('appContainer').style.display = 'none';
+            document.getElementById('loginOverlay').style.opacity = '1';
+            document.getElementById('loginOverlay').style.display = 'flex';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        function showApp() {
+            const overlay = document.getElementById('loginOverlay');
+            overlay.style.opacity = '0';
+            
+            // Tampilkan container aplikasi terlebih dahulu agar elemen DOM peta ada ukurannya
+            document.getElementById('appContainer').style.display = 'block';
+            
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                // Paksa render ulang ukuran dan ubin peta setelah overlay benar-benar hilang
+                map.invalidateSize(true);
+                insetMap.invalidateSize(true);
+                updateInsetMap();
+            }, 400);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            if (sessionStorage.getItem('isLoggedIn') === 'true') {
+                document.getElementById('loginOverlay').style.display = 'none';
+                document.getElementById('appContainer').style.display = 'block';
+                setTimeout(() => {
+                    map.invalidateSize(true);
+                    insetMap.invalidateSize(true);
+                    updateInsetMap();
+                }, 100);
             }
         });
 
-        // SWIPE & TARIK GESTURE UNTUK MOBILE PANEL
+        // SKRIP GIS & PETA UTAMA
+        window.addEventListener('load', function() {
+            fetch('https://rdtrsulsel.goatcounter.com/counter/.json')
+                .then(response => {
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                })
+                .then(data => {
+                    const totalVisits = (data.total !== undefined) ? data.total : (data.count !== undefined ? data.count : 2);
+                    const el = document.getElementById('visitorCountDesktop');
+                    if(el) el.textContent = totalVisits.toLocaleString('id-ID');
+                })
+                .catch(() => {
+                    const el = document.getElementById('visitorCountDesktop');
+                    if(el) el.textContent = "2";
+                });
+        });
+
         const sidebarPanel = document.getElementById('sidebarPanel');
         let touchStartY = 0;
         let touchEndY = 0;
