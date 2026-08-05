@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>RDTR Soppeng & Bone</title>
     <link rel="icon" type="image/png" href="img/logo_atr.png">    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
@@ -11,8 +11,8 @@
     <script data-goatcounter="https://rdtrsulsel.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body, html { height: 100%; font-family: 'Inter', -apple-system, sans-serif; overflow: hidden; background: #0f172a; }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        body, html { height: 100vh; height: 100svh; font-family: 'Inter', -apple-system, sans-serif; overflow: hidden; background: #0f172a; }
         
         /* HALAMAN LOGIN */
         #loginOverlay {
@@ -47,8 +47,8 @@
         .error-msg { color: #ef4444; font-size: 11px; margin-top: 10px; display: none; }
 
         /* APLIKASI UTAMA PETA */
-        #appContainer { display: none; width: 100%; height: 100vh; position: relative; }
-        #map { width: 100%; height: 100vh; z-index: 1; }
+        #appContainer { display: none; width: 100%; height: 100vh; height: 100svh; position: relative; }
+        #map { width: 100%; height: 100vh; height: 100svh; z-index: 1; }
 
         /* Sidebar Control Panel */
         .sidebar-panel {
@@ -187,7 +187,6 @@
         }
         #inset-map { width: 100%; height: 100%; flex-grow: 1; background: #0b1120; }
 
-        /* TOMBOL PANEL CLOSE DI DALAM POJOK KANAN ATAS PANEL (MODE HP) */
         .mobile-panel-toggle-icon {
             position: absolute;
             top: 14px;
@@ -208,7 +207,7 @@
         }
         .mobile-panel-toggle-icon:active { background: rgba(59, 130, 246, 0.4); }
 
-        /* RESPONSIF MODE HP */
+        /* RESPONSIF MODE HP (MOBILE FIXES) */
         @media (max-width: 768px) {
             .sidebar-panel {
                 position: absolute; top: auto; left: 0; right: 0; bottom: 0;
@@ -219,6 +218,8 @@
                 transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 pointer-events: auto;
             }
+            
+            /* KUNCI UTAMA: Matikan pointer-events saat panel terlipat agar peta bisa diklik sepenuhnya */
             .sidebar-panel.collapsed-mobile { 
                 transform: translateY(calc(100% - 45px)); 
                 pointer-events: none; 
@@ -475,7 +476,6 @@
 
         const sidebarPanel = document.getElementById('sidebarPanel');
 
-        // MENJAGA SUPAYA SAAT PANEL DITUTUP/DIBUKA, KOORDINAT PUSAT & ZOOM PETA TIDAK BERUBAH SECARA OTOMATIS (TIDAK ADA FITBOUNDS ULANG YANG MERUSAK VIEW)
         let activeBounds = null;
         let activeConfigKeyRef = null;
 
@@ -488,13 +488,13 @@
             
             if (isMobile) {
                 const isPanelCollapsed = sidebarPanel.classList.contains('collapsed-mobile');
-                const bottomPadding = isPanelCollapsed ? 40 : (sidebarPanel.offsetHeight + 15);
-                const topPadding = 75; 
+                const bottomPadding = isPanelCollapsed ? 50 : (sidebarPanel.offsetHeight + 15);
+                const topPadding = 65; 
 
                 map.fitBounds(targetBounds, {
-                    paddingTopLeft: [20, topPadding],
-                    paddingBottomRight: [20, bottomPadding],
-                    maxZoom: activeConfigKey && activeConfigKey.startsWith('WP_') ? 15 : 10,
+                    paddingTopLeft: [15, topPadding],
+                    paddingBottomRight: [15, bottomPadding],
+                    maxZoom: activeConfigKey && activeConfigKey.startsWith('WP_') ? 14 : 10,
                     animate: true
                 });
             } else {
@@ -782,7 +782,6 @@
             panel.classList.toggle('collapsed', collapse);
             document.getElementById('openSidebarBtn').classList.toggle('visible', collapse);
             
-            // HANYA MENGATUR UKURAN MAP TANPA MEMANGGIL FITBOUNDS ULANG (MENCEGAH POLIGON BERUBAH UKURAN ATAU POP-UP HILANG)
             setTimeout(() => { 
                 map.invalidateSize({ animate: true }); 
                 updateInsetMap(); 
