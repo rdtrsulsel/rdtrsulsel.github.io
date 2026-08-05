@@ -18,34 +18,33 @@
         #loginOverlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #0f172a; display: flex; align-items: center; justify-content: center;
-            z-index: 99999; transition: opacity 0.4s ease;
+            z-index: 99999; transition: opacity 0.4s ease; padding: 15px;
         }
         .login-container {
-            width: 100%; max-width: 400px; padding: 30px;
+            width: 100%; max-width: 400px; padding: 25px 20px;
             background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.6); text-align: center;
         }
-        /* UKURAN LOGO LOGIN DIPBESAR MENJADI 96px */
-        .login-logo { width: 96px; height: 96px; object-fit: contain; margin-bottom: 15px; }
-        .login-title { font-size: 15px; font-weight: 700; color: #f8fafc; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
-        .login-subtitle { font-size: 11px; color: #94a3b8; margin-bottom: 25px; line-height: 1.4; }
-        .form-group { margin-bottom: 15px; text-align: left; }
-        .form-group label { display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 1px; margin-bottom: 6px; }
+        .login-logo { width: 56px; height: 56px; object-fit: contain; margin-bottom: 12px; }
+        .login-title { font-size: 14px; font-weight: 700; color: #f8fafc; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+        .login-subtitle { font-size: 11px; color: #94a3b8; margin-bottom: 20px; line-height: 1.4; }
+        .form-group { margin-bottom: 12px; text-align: left; }
+        .form-group label { display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 1px; margin-bottom: 5px; }
         .form-control {
-            width: 100%; padding: 12px 14px; background: rgba(30, 41, 59, 0.6);
+            width: 100%; padding: 10px 12px; background: rgba(30, 41, 59, 0.6);
             border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px;
             color: #f8fafc; font-size: 12px; outline: none; transition: all 0.2s;
         }
         .form-control:focus { border-color: #3b82f6; box-shadow: 0 0 10px rgba(59, 130, 246, 0.25); }
         .login-btn {
-            width: 100%; padding: 12px; background: #3b82f6; border: none;
+            width: 100%; padding: 11px; background: #3b82f6; border: none;
             border-radius: 8px; color: #ffffff; font-size: 12px; font-weight: 700;
             text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer;
-            transition: background 0.2s; margin-top: 10px;
+            transition: background 0.2s; margin-top: 8px;
         }
         .login-btn:hover { background: #2563eb; }
-        .error-msg { color: #ef4444; font-size: 11px; margin-top: 12px; display: none; }
+        .error-msg { color: #ef4444; font-size: 11px; margin-top: 10px; display: none; }
 
         /* APLIKASI UTAMA PETA */
         #appContainer { display: none; width: 100%; height: 100vh; position: relative; }
@@ -58,8 +57,9 @@
             border-right: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 10px 0 30px rgba(0,0,0,0.5); z-index: 1000;
             display: flex; flex-direction: column; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: auto;
         }
-        .sidebar-panel.collapsed { transform: translateX(-360px); }
+        .sidebar-panel.collapsed { transform: translateX(-360px); pointer-events: none; }
         .sidebar-header { padding: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: space-between; }
         .sidebar-title-group h1 { font-size: 14px; font-weight: 700; color: #f8fafc; letter-spacing: 0.5px; text-transform: uppercase; }
         .sidebar-title-group span { font-size: 10px; color: #94a3b8; letter-spacing: 0.5px; }
@@ -126,18 +126,18 @@
         .leaflet-popup-tip-container { display: none !important; }
         .leaflet-popup-content { margin: 0 !important; line-height: 1.4 !important; }
 
-        .popup-info-card { padding: 14px 16px; min-width: 240px; max-width: 290px; }
+        .popup-info-card { padding: 12px 14px; min-width: 220px; max-width: 270px; }
         .popup-info-card h3 {
-            font-size: 12px; color: #38bdf8; text-transform: uppercase; font-weight: 700;
-            letter-spacing: 0.5px; margin-bottom: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.12); padding-bottom: 6px;
+            font-size: 11.5px; color: #38bdf8; text-transform: uppercase; font-weight: 700;
+            letter-spacing: 0.5px; margin-bottom: 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.12); padding-bottom: 5px;
         }
-        .popup-info-card .info-row { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #cbd5e1; margin-bottom: 6px; gap: 12px; }
+        .popup-info-card .info-row { display: flex; justify-content: space-between; align-items: center; font-size: 10.5px; color: #cbd5e1; margin-bottom: 5px; gap: 10px; }
         .popup-info-card .info-row span.label { color: #94a3b8; }
         .popup-info-card .info-row span.val { font-weight: 600; color: #f1f5f9; text-align: right; }
         
         .badge-status-pkl {
-            display: inline-block; padding: 2px 8px; border-radius: 4px;
-            font-size: 10px; font-weight: 700; background: rgba(59, 130, 246, 0.2);
+            display: inline-block; padding: 2px 6px; border-radius: 4px;
+            font-size: 9.5px; font-weight: 700; background: rgba(59, 130, 246, 0.2);
             color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4);
         }
 
@@ -146,8 +146,7 @@
             background: rgba(8, 13, 24, 0.98); display: flex; flex-direction: column; gap: 10px; margin-top: auto; 
         }
         .footer-main-row { display: flex; align-items: center; gap: 14px; width: 100%; }
-        /* UKURAN LOGO FOOTER DIPBESAR MENJADI 76px AGAR PAS DAN JELAS */
-        .atr-logo-img { width: 76px; height: 76px; object-fit: contain; flex-shrink: 0; }
+        .atr-logo-img { width: 64px; height: 64px; object-fit: contain; flex-shrink: 0; }
         .footer-text-group { display: flex; flex-direction: column; gap: 3px; }
         .footer-label { font-size: 10px; font-weight: 800; color: #38bdf8; letter-spacing: 1.2px; text-transform: uppercase; }
         .footer-title { font-size: 11px; font-weight: 700; color: #f8fafc; line-height: 1.4; text-transform: uppercase; }
@@ -188,41 +187,73 @@
         }
         #inset-map { width: 100%; height: 100%; flex-grow: 1; background: #0b1120; }
 
+        /* TOMBOL PANEL CLOSE DI DALAM POJOK KANAN ATAS PANEL (MODE HP) */
+        .mobile-panel-toggle-icon {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #f8fafc;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 2005;
+            font-size: 13px;
+            transition: transform 0.3s ease, background 0.2s;
+        }
+        .mobile-panel-toggle-icon:active { background: rgba(59, 130, 246, 0.4); }
+
         /* RESPONSIF MODE HP */
         @media (max-width: 768px) {
             .sidebar-panel {
                 position: absolute; top: auto; left: 0; right: 0; bottom: 0;
-                width: 100%; height: auto; max-height: 52vh; transform: translateY(0);
+                width: 100%; height: auto; max-height: 48vh; transform: translateY(0);
                 border-radius: 20px 20px 0 0; box-shadow: 0 -10px 30px rgba(0,0,0,0.7);
                 z-index: 2000; background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(16px);
                 border-top: 1px solid rgba(255, 255, 255, 0.15); overflow-y: auto;
-                touch-action: pan-y;
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                pointer-events: auto;
             }
-            .sidebar-panel.collapsed-mobile { transform: translateY(calc(100% - 46px)); }
+            .sidebar-panel.collapsed-mobile { 
+                transform: translateY(calc(100% - 45px)); 
+                pointer-events: none; 
+            }
+            .sidebar-panel.collapsed-mobile .mobile-panel-toggle-icon {
+                pointer-events: auto; 
+            }
+            
             .sidebar-panel::before {
                 content: ''; position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
                 width: 40px; height: 4px; background: rgba(255, 255, 255, 0.35); border-radius: 2px; z-index: 2005;
             }
+            
             .sidebar-header, .collapse-panel-btn, .open-sidebar-btn { display: none !important; }
-            .sidebar-content { padding: 16px 12px 10px 12px; overflow-y: visible !important; }
+            .sidebar-content { padding: 22px 12px 6px 12px; overflow-y: visible !important; }
             .sidebar-content p, .layer-control-container, .desktop-visitor-text, .inset-map-container { display: none !important; }
-            .section-label { font-size: 8.5px; text-align: center; color: #94a3b8; margin-top: 2px; margin-bottom: 8px; letter-spacing: 1.2px; text-transform: uppercase; }
+            .section-label { font-size: 8px; text-align: center; color: #94a3b8; margin-top: 2px; margin-bottom: 6px; letter-spacing: 1.2px; text-transform: uppercase; }
             
-            .wp-list { display: flex; flex-direction: row; gap: 8px; overflow-x: auto; padding-bottom: 6px; scrollbar-width: none; margin-bottom: 6px; }
+            .wp-list { display: flex; flex-direction: row; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; margin-bottom: 4px; }
             .wp-list::-webkit-scrollbar { display: none; }
-            .wp-list li { flex: 1 0 31%; min-width: 105px; background: rgba(30, 41, 59, 0.85); border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 0; padding: 9px 8px; border-radius: 10px; text-align: left; }
-            .wp-title { font-size: 10px; font-weight: 700; color: #ffffff; display: flex; gap: 4px; width: 100%; line-height: 1.3; }
-            .wp-desc { font-size: 8.5px; color: #94a3b8; width: 100%; line-height: 1.25; margin-top: 3px; }
+            .wp-list li { flex: 1 0 31%; min-width: 105px; background: rgba(30, 41, 59, 0.85); border: 1px solid rgba(255, 255, 255, 0.1); margin-bottom: 0; padding: 8px; border-radius: 10px; text-align: left; }
+            .wp-title { font-size: 9.5px; font-weight: 700; color: #ffffff; display: flex; gap: 4px; width: 100%; line-height: 1.3; }
+            .wp-desc { font-size: 8px; color: #94a3b8; width: 100%; line-height: 1.2; margin-top: 2px; }
             
-            .sidebar-footer { padding: 12px 14px; background: rgba(8, 13, 24, 0.98); gap: 6px; margin-top: 4px; border-radius: 0; }
-            /* LOGO FOOTER DI HP DISESUAIKAN MENJADI 56px */
-            .atr-logo-img { width: 56px; height: 56px; }
-            .footer-title { font-size: 9.5px; line-height: 1.3; }
+            .sidebar-footer { padding: 10px 12px; background: rgba(8, 13, 24, 0.98); gap: 6px; margin-top: 2px; border-radius: 0; }
+            .atr-logo-img { width: 52px !important; height: 52px !important; }
+            .footer-title { font-size: 9px; line-height: 1.25; }
+            .footer-sub { font-size: 8.5px; }
             
-            .right-controls-stack { top: 15px; right: 15px; gap: 10px; }
-            .globe-basemap-btn, .logout-action-btn { width: 44px; height: 44px; filter: none !important; box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
-            .reset-view-btn { width: 42px; height: 42px; filter: none !important; box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
+            .right-controls-stack { top: 12px; right: 12px; gap: 8px; }
+            .globe-basemap-btn, .logout-action-btn { width: 40px; height: 40px; filter: none !important; box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
+            .reset-view-btn { width: 38px; height: 38px; filter: none !important; box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
             .globe-label, .reset-label, .logout-label { display: none !important; }
+
+            .mobile-panel-toggle-icon { display: flex; }
         }
     </style>
 </head>
@@ -258,6 +289,10 @@
         </div>
 
         <div class="sidebar-panel" id="sidebarPanel">
+            <button class="mobile-panel-toggle-icon" id="mobilePanelToggleIcon" onclick="toggleMobilePanel()" title="Tutup/Buka Panel">
+                <span id="mobileArrowSymbol">▲</span>
+            </button>
+
             <div class="sidebar-header" id="sidebarHeader">
                 <div class="sidebar-title-group">
                     <h1>RDTR WP Soppeng & Bone</h1>
@@ -342,34 +377,33 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script>
-        // --- FITUR AUTO-LOGOUT 5 MENIT (MOUSE, KEYBOARD, TOUCHSCREEN) ---
-        const IDLE_LIMIT = 5 * 60 * 1000;
-        let idleTimer;
-
-        function checkInactivityAndLogout() {
-            if (sessionStorage.getItem('isLoggedIn') === 'true') {
-                handleLogout();
-                alert("Sesi Anda telah berakhir karena tidak ada aktivitas selama 5 menit.");
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if (
+                e.key === 'F12' ||
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+                (e.ctrlKey && e.key === 'U')
+            ) {
+                e.preventDefault();
+                return false;
             }
-        }
+        });
+
+        let idleTimer = null;
+        const IDLE_TIMEOUT_LIMIT = 5 * 60 * 1000;
 
         function resetIdleTimer() {
+            if (sessionStorage.getItem('isLoggedIn') !== 'true') return;
             clearTimeout(idleTimer);
-            if (sessionStorage.getItem('isLoggedIn') === 'true') {
-                idleTimer = setTimeout(checkInactivityAndLogout, IDLE_LIMIT);
-            }
+            idleTimer = setTimeout(() => {
+                handleLogout();
+            }, IDLE_TIMEOUT_LIMIT);
         }
 
-        window.onload = resetIdleTimer;
-        window.onmousemove = resetIdleTimer;
-        window.onmousedown = resetIdleTimer;
-        window.onclick = resetIdleTimer;
-        window.onkeypress = resetIdleTimer;
-        window.addEventListener('scroll', resetIdleTimer, true);
-        window.addEventListener('touchstart', resetIdleTimer, true);
-        window.addEventListener('touchmove', resetIdleTimer, true);
+        ['mousemove', 'mousedown', 'keypress', 'touchstart', 'scroll', 'click'].forEach(evt => {
+            document.addEventListener(evt, resetIdleTimer, true);
+        });
 
-        // LOGIKA OTENTIKASI LOGIN
         function handleLogin(e) {
             e.preventDefault();
             const u = document.getElementById('username').value.trim();
@@ -379,7 +413,6 @@
             if (u === 'maiwarman' && p === 'rdtrsulsel') {
                 sessionStorage.setItem('isLoggedIn', 'true');
                 showApp();
-                resetIdleTimer();
             } else {
                 err.style.display = 'block';
                 document.getElementById('password').value = '';
@@ -387,8 +420,8 @@
         }
 
         function handleLogout() {
-            sessionStorage.removeItem('isLoggedIn');
             clearTimeout(idleTimer);
+            sessionStorage.removeItem('isLoggedIn');
             document.getElementById('appContainer').style.display = 'none';
             document.getElementById('loginOverlay').style.opacity = '1';
             document.getElementById('loginOverlay').style.display = 'flex';
@@ -399,31 +432,30 @@
         function showApp() {
             const overlay = document.getElementById('loginOverlay');
             overlay.style.opacity = '0';
-            
             document.getElementById('appContainer').style.display = 'block';
             
             setTimeout(() => {
                 overlay.style.display = 'none';
                 map.invalidateSize(true);
                 insetMap.invalidateSize(true);
-                updateInsetMap();
-            }, 400);
+                resetMapView(); 
+            }, 300);
+            
+            resetIdleTimer();
         }
 
         window.addEventListener('DOMContentLoaded', () => {
             if (sessionStorage.getItem('isLoggedIn') === 'true') {
                 document.getElementById('loginOverlay').style.display = 'none';
                 document.getElementById('appContainer').style.display = 'block';
-                resetIdleTimer();
                 setTimeout(() => {
                     map.invalidateSize(true);
                     insetMap.invalidateSize(true);
-                    updateInsetMap();
+                    resetMapView(); 
                 }, 100);
             }
         });
 
-        // SKRIP GIS & PETA UTAMA
         window.addEventListener('load', function() {
             fetch('https://rdtrsulsel.goatcounter.com/counter/.json')
                 .then(response => {
@@ -442,36 +474,56 @@
         });
 
         const sidebarPanel = document.getElementById('sidebarPanel');
-        let touchStartY = 0;
-        let touchEndY = 0;
 
-        sidebarPanel.addEventListener('touchstart', function(e) {
-            touchStartY = e.changedTouches[0].screenY;
-        }, { passive: true });
+        // MENJAGA SUPAYA SAAT PANEL DITUTUP/DIBUKA, KOORDINAT PUSAT & ZOOM PETA TIDAK BERUBAH SECARA OTOMATIS (TIDAK ADA FITBOUNDS ULANG YANG MERUSAK VIEW)
+        let activeBounds = null;
+        let activeConfigKeyRef = null;
 
-        sidebarPanel.addEventListener('touchend', function(e) {
-            touchEndY = e.changedTouches[0].screenY;
-            handleSwipe();
-        }, { passive: true });
+        function performFitBounds(targetBounds, activeConfigKey = null) {
+            if (!targetBounds || !targetBounds.isValid()) return;
+            activeBounds = targetBounds;
+            activeConfigKeyRef = activeConfigKey;
 
-        function handleSwipe() {
-            if (window.innerWidth <= 768) {
-                if (touchEndY - touchStartY > 50) {
-                    sidebarPanel.classList.add('collapsed-mobile');
-                } else if (touchStartY - touchEndY > 50) {
-                    sidebarPanel.classList.remove('collapsed-mobile');
-                }
+            const isMobile = window.innerWidth <= 768;
+            
+            if (isMobile) {
+                const isPanelCollapsed = sidebarPanel.classList.contains('collapsed-mobile');
+                const bottomPadding = isPanelCollapsed ? 40 : (sidebarPanel.offsetHeight + 15);
+                const topPadding = 75; 
+
+                map.fitBounds(targetBounds, {
+                    paddingTopLeft: [20, topPadding],
+                    paddingBottomRight: [20, bottomPadding],
+                    maxZoom: activeConfigKey && activeConfigKey.startsWith('WP_') ? 15 : 10,
+                    animate: true
+                });
+            } else {
+                const isDesktopCollapsed = sidebarPanel.classList.contains('collapsed');
+                const leftPadding = isDesktopCollapsed ? 50 : 410;
+
+                map.fitBounds(targetBounds, {
+                    paddingTopLeft: [leftPadding, 50],
+                    paddingBottomRight: [50, 50],
+                    maxZoom: activeConfigKey && activeConfigKey.startsWith('WP_') ? 15 : 10,
+                    animate: true
+                });
             }
         }
 
-        sidebarPanel.addEventListener('click', function(e) {
+        function toggleMobilePanel() {
+            sidebarPanel.classList.toggle('collapsed-mobile');
+            const isCollapsed = sidebarPanel.classList.contains('collapsed-mobile');
+            document.getElementById('mobileArrowSymbol').textContent = isCollapsed ? "▲" : "▼";
+
             if (window.innerWidth <= 768) {
-                const rect = sidebarPanel.getBoundingClientRect();
-                if (e.clientY - rect.top < 40) {
-                    sidebarPanel.classList.toggle('collapsed-mobile');
-                }
+                setTimeout(() => {
+                    map.invalidateSize(true);
+                    if (activeBounds) {
+                        performFitBounds(activeBounds, activeConfigKeyRef);
+                    }
+                }, 320);
             }
-        });
+        }
 
         const map = L.map('map', { zoomControl: false, attributionControl: false });
         
@@ -549,12 +601,6 @@
             currentTargetData = null;
         }
 
-        map.on('popupclose', () => {
-            if (activeCalloutLine) { map.removeLayer(activeCalloutLine); activeCalloutLine = null; }
-            if (activeCalloutDot) { map.removeLayer(activeCalloutDot); activeCalloutDot = null; }
-            currentTargetData = null;
-        });
-
         function renderCalloutPositions() {
             if (!currentTargetData) return;
             const { configKey, anchorLatLng } = currentTargetData;
@@ -563,7 +609,8 @@
             const containerPt = map.latLngToContainerPoint(anchorLatLng);
 
             const xOffset = isMobile ? 0 : (containerPt.x > map.getSize().x / 2 ? -210 : 210);
-            const yOffset = isMobile ? -100 : -130;
+            const yOffset = isMobile ? -65 : -130; 
+            
             const targetPt = L.point(containerPt.x + xOffset, containerPt.y + yOffset);
             const targetLatLng = map.containerPointToLatLng(targetPt);
 
@@ -603,6 +650,12 @@
 
             if (!activePopup) {
                 activePopup = L.popup({ autoPan: false, closeButton: true, pane: 'paneCallout' }).setLatLng(targetLatLng).setContent(content).openOn(map);
+                activePopup.on('remove', () => {
+                    if (activeCalloutLine) { map.removeLayer(activeCalloutLine); activeCalloutLine = null; }
+                    if (activeCalloutDot) { map.removeLayer(activeCalloutDot); activeCalloutDot = null; }
+                    activePopup = null;
+                    currentTargetData = null;
+                });
             } else {
                 activePopup.setLatLng(targetLatLng);
             }
@@ -625,17 +678,13 @@
                 mouseover: e => e.target.setStyle({ fillOpacity: 0.35, weight: 4 }),
                 mouseout: e => e.target.setStyle(config.style),
                 click: e => {
-                    const isMobile = window.innerWidth <= 768;
                     const clickedLatLng = e.latlng;
                     if (configKey.startsWith('WP_')) {
                         if (config.kabupaten.toLowerCase().includes("soppeng")) toggleLayer('Soppeng', false);
                         else if (config.kabupaten.toLowerCase().includes("bone")) toggleLayer('Bone', false);
-                        if (isMobile) {
-                            map.once('moveend', () => triggerCalloutAt(configKey, clickedLatLng));
-                            map.fitBounds(e.target.getBounds(), { padding: [30, 30], maxZoom: 15, animate: true });
-                        } else {
-                            triggerCalloutAt(configKey, clickedLatLng);
-                        }
+                        
+                        map.once('moveend', () => triggerCalloutAt(configKey, clickedLatLng));
+                        performFitBounds(e.target.getBounds(), configKey);
                     } else {
                         triggerCalloutAt(configKey, clickedLatLng);
                     }
@@ -704,31 +753,43 @@
             if (targetLayerGroup && targetLayerGroup.getBounds().isValid()) {
                 const bounds = targetLayerGroup.getBounds();
                 const centerLatLng = bounds.getCenter();
-                const isMobile = window.innerWidth <= 768;
 
                 map.once('moveend', () => triggerCalloutAt(data.key, centerLatLng));
-                map.fitBounds(bounds, {
-                    paddingTopLeft: isMobile ? [30, 30] : [380, 50],
-                    paddingBottomRight: isMobile ? [30, 30] : [50, 50],
-                    maxZoom: 15, animate: true
-                });
+                performFitBounds(bounds, data.key);
             }
             document.querySelectorAll('.wp-list li').forEach((el, i) => el.classList.toggle('active', i === index));
         }
 
         function applyInitialView() {
-            if (window.innerWidth <= 768) map.setView([-4.85, 120.00], 8.8);
-            else map.setView([-4.50, 119.80], 9.4);
+            const combinedBounds = L.latLngBounds([]);
+            Object.keys(wpLayerRefs).forEach(k => {
+                if (wpLayerRefs[k] && wpLayerRefs[k].getBounds().isValid()) {
+                    combinedBounds.extend(wpLayerRefs[k].getBounds());
+                }
+            });
+
+            if (combinedBounds.isValid()) {
+                performFitBounds(combinedBounds);
+            } else {
+                map.setView([-4.85, 120.00], 8.8);
+            }
             updateInsetMap();
         }
-        applyInitialView();
 
         function toggleSidebar(collapse) {
             const panel = document.getElementById('sidebarPanel');
             if (window.innerWidth <= 768) return;
             panel.classList.toggle('collapsed', collapse);
             document.getElementById('openSidebarBtn').classList.toggle('visible', collapse);
-            setTimeout(() => { map.invalidateSize({ animate: true }); updateInsetMap(); }, 300);
+            
+            // HANYA MENGATUR UKURAN MAP TANPA MEMANGGIL FITBOUNDS ULANG (MENCEGAH POLIGON BERUBAH UKURAN ATAU POP-UP HILANG)
+            setTimeout(() => { 
+                map.invalidateSize({ animate: true }); 
+                updateInsetMap(); 
+                if (activeCalloutLine && activePopup) {
+                    renderCalloutPositions();
+                }
+            }, 300);
         }
 
         function toggleBasemap() {
@@ -747,10 +808,29 @@
 
         function resetMapView() {
             clearCallout();
+            
+            if (currentBasemap === 'osm') {
+                map.removeLayer(osmTopoLayer);
+                googleSatelliteLayer.addTo(map);
+                insetMap.removeLayer(insetTopoLayer);
+                insetSatelliteLayer.addTo(insetMap);
+                currentBasemap = 'satellite';
+                document.getElementById('globeIcon').src = 'img/google.png';
+                document.getElementById('globeLabel').textContent = 'Google Satellite';
+            }
+
             toggleLayer('Soppeng', true);
             toggleLayer('Bone', true);
+
             applyInitialView();
+            map.invalidateSize(true);
+
             document.querySelectorAll('.wp-list li').forEach(el => el.classList.remove('active'));
+
+            if (window.innerWidth <= 768) {
+                sidebarPanel.classList.remove('collapsed-mobile');
+                document.getElementById('mobileArrowSymbol').textContent = "▼";
+            }
         }
     </script>
 </body>
